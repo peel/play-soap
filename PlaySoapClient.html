@@ -1,0 +1,158 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Play SOAP - Documentation - Using the Play SOAP client</title>
+		<meta charset="utf-8"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+		<meta name="description" content="Play SOAP is an open source module for PlayFramework."/>
+		<link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700,400italic,700italic" rel="stylesheet" type="text/css"/>
+		<link rel="stylesheet" href="stylesheets/normalize.css"/>
+		<link rel="stylesheet" href="stylesheets/foundation.min.css"/>
+		<link rel="stylesheet" href="stylesheets/main.min.css"/>
+		<script type="text/javascript" src="javascripts/vendor/modernizr.min.js"></script>
+		<link rel="shortcut icon" href="favicon.ico" />
+	</head>
+	<body class="home">
+		<div class="off-canvas-wrap">
+			<div class="inner-wrap">
+				<nav class="tab-bar">
+					<section class="left-small">
+						<a class="left-off-canvas-toggle menu-icon" ><span></span></a>
+					</section>
+					<section class="middle tab-bar-section">
+						<h1 class="title"><a href="./Home.html">Play SOAP Documentation</a></h1><a href="http://www.lightbend.com" class="typesafe-link"><svg class="svg-icon typesafe-icon" title="Lightbend Icon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 154 154" enable-background="new 0 0 154 154"><g><defs><circle id="a" cx="76.5" cy="76.5" r="75"/></defs><clipPath id="b"><use xlink:href="#a" overflow="visible"/></clipPath><g clip-path="url(#b)"><path fill="#0B5567" d="M68.2 86.2h146.2c4.8 0 8.7-3.9 8.7-8.7 0-4.8-3.9-8.7-8.7-8.7h-146.2c-4.8 0-8.7 3.9-8.7 8.7 0 4.8 3.9 8.7 8.7 8.7z"/><path fill="#15A9CE" d="M67.2 84.2h146.2c4.8 0 8.7-3.9 8.7-8.7 0-4.8-3.9-8.7-8.7-8.7h-146.2c-4.8 0-8.7 3.9-8.7 8.7 0 4.8 3.9 8.7 8.7 8.7z"/><path fill="#49691F" d="M86.2 57.8h146.2c4.8 0 8.7-3.9 8.7-8.7 0-4.8-3.9-8.7-8.7-8.7h-146.2c-4.8 0-8.7 3.9-8.7 8.7 0 4.9 3.9 8.7 8.7 8.7z"/><path fill="#92D13D" d="M85.2 55.8h146.2c4.8 0 8.7-3.9 8.7-8.7 0-4.8-3.9-8.7-8.7-8.7h-146.2c-4.8 0-8.7 3.9-8.7 8.7 0 4.9 3.9 8.7 8.7 8.7z"/><path fill="#6F1A12" d="M50.2 114.5h146.2c4.8 0 8.7-3.9 8.7-8.7 0-4.8-3.9-8.7-8.7-8.7h-146.2c-4.8 0-8.7 3.9-8.7 8.7 0 4.8 3.9 8.7 8.7 8.7z"/><path fill="#DE3423" d="M49.2 112.5h146.2c4.8 0 8.7-3.9 8.7-8.7 0-4.8-3.9-8.7-8.7-8.7h-146.2c-4.8 0-8.7 3.9-8.7 8.7 0 4.8 3.9 8.7 8.7 8.7z"/></g><path fill="#fff" d="M76.5 1c-41.6 0-75.5 33.9-75.5 75.5s33.9 75.5 75.5 75.5 75.5-33.9 75.5-75.5-33.9-75.5-75.5-75.5zm0 142c-36.7 0-66.5-29.8-66.5-66.5s29.8-66.5 66.5-66.5 66.5 29.8 66.5 66.5-29.8 66.5-66.5 66.5z"/></g></svg></a>
+					</section>
+				</nav>
+				<aside class="left-off-canvas-menu">
+					<ul class="off-canvas-list">
+						
+							<li><a href="Home.html">Home</a></li>
+						
+							<li><a href="SbtWsdl.html">Using sbt WSDL</a></li>
+						
+							<li><a href="PlaySoapClient.html">Using the Play SOAP client</a></li>
+						
+							<li><a href="Handlers.html">Using JAX WS Handlers</a></li>
+						
+							<li><a href="Security.html">Security</a></li>
+						
+					</ul>
+				</aside>
+				<div class="row">
+					<div class="small-12 large-12 columns">
+
+						<article id="page-content">
+							<h1>Using the Play SOAP client</h1><h2>Accessing the client</h2><p>Once you have sbt WSDL generating a soap client for you, it is quite straightforward to use. How you access it depends on the service and port names in the WSDL. Consider the following service section from a WSDL:</p>
+<pre class="prettyprint"><code class="language-xml">  &lt;wsdl:service name=&quot;HelloWorldService&quot;&gt;
+    &lt;wsdl:port binding=&quot;tns:HelloWorldSoapBinding&quot; name=&quot;HelloWorld&quot;&gt;
+      &lt;soap:address location=&quot;http://example.com/helloWorld&quot;/&gt;
+    &lt;/wsdl:port&gt;
+  &lt;/wsdl:service&gt;
+</code></pre><p>Assuming that the package name that the client was generated into is <code>com.example</code>, Play will generate a service class called <code>com.example.HelloWorldService</code>. This class is actually a Play plugin that allows you to configure the client, including configuring the address for each port to use.</p><p>Note that there are some situations where sbt WSDL won&rsquo;t use the service name from the WSDL, these are when the name of the service conflicts with another class that it generated, such as the name of the service endpoint interface. In that case, sbt WSDL will append <code>_Service</code> to the end of the service name, for example <code>com.example.HelloWorldService_Service</code>.</p><p>Having located the service class, you can now get a port. In the above WSDL there is one port named <code>HelloWorld</code>, and, according to the <code>HelloWorldSoapBinding</code> (not shown above), this returns a service endpoint interface called <code>HelloWorld</code>. To access the endpoint, simply have it injected into your components or controllers, like so in Scala:</p>
+<pre class="prettyprint"><code class="language-scala">class MyComponent @Inject() (helloWorldService: HelloWorldService) {
+  val client: HelloWorld = helloWorldService.helloWorld
+}
+</code></pre><p>Or in Java:</p>
+<pre class="prettyprint"><code class="language-java">public class MyComponent {
+  
+    private final HelloWorldService helloWorldService;
+
+    @Inject
+    public MyComponent(HelloWorldService helloWorldService) {
+        this.helloWorldService - helloWorldService;
+    }
+
+    public void someMethod() {
+        HelloWorld client = helloWorldService.getHelloWorld();
+        // use the client somehow
+    }
+</code></pre><h2>Using the client</h2><p>Once you&rsquo;ve got a reference to the <code>client</code>, you can invoke methods on it. For example, let&rsquo;s assume our client has operation called <code>sayHello</code> that takes a String parameter and returns a String parameter. To invoke this from a Play Scala action, you would do this:</p>
+<pre class="prettyprint"><code class="language-scala">import play.api.libs.concurrent.Execution.Implicits._
+
+def hello(name: String) = Action.async {
+  val client: HelloWorld = helloWorldService.helloWorld
+  client.sayHello(name).map { answer =&gt;
+    Ok(answer)
+  }
+}
+</code></pre><p>To invoke it from a Play Java action you would do this:</p>
+<pre class="prettyprint"><code class="language-java">import java.util.concurrent.CompletionStage;
+
+public CompletionStage&lt;Result&gt; hello(String name) {
+    HelloWorld client = helloWorldService.getHelloWorld();
+    return client.sayHello(name).map(answer -&gt; {
+        return ok(answer);
+    });
+}
+</code></pre><h3>A note on using Scala</h3><p>The generated data objects will all be Java beans, with getter/setter style properties, and using Java collections. For convenience when working with the Java collections, you may import the Scala implicit conversions for Scala collections, like so:</p>
+<pre class="prettyprint"><code class="language-scala">import scala.collection.JavaConversions._
+</code></pre><p>Using this you can work with Java collections as if they were Scala collections, and pass Scala collections to setters and methods that accept Java collections.</p><p>It&rsquo;s also important to remember that many properties could be <code>null</code>.</p><p>A pure Scala client that uses case classes, Scala collections and <code>Option</code> is a possible future enhancement for the Play SOAP library.</p><h2>Configuring the client</h2><p>Configuration for the client works hierarchically, each configuration item is first checked to see if it&rsquo;s defined for the port, if not then for the service, and finally globally. The format for global configuration is <code>play.soap.*</code>. The format for configuration applying to a particular service is <code>play.soap.services.&lt;fqsn&gt;</code>, where <code>&lt;fqsn&gt;</code> is the fully qualified service name, for example, <code>com.example.HelloWorldService</code>. The format for configuration applying to a particular port is <code>play.soap.services.&lt;fqsn&gt;.ports.&lt;portName&gt;</code>, where <code>&lt;portName&gt;</code> is the name of the port, for example <code>HelloWorld</code>.</p><p>So for the client above, to set the debug log just for the port, you would set:</p>
+<pre class="prettyprint"><code>play.soap.services.com.example.HelloWorldService.ports.HelloWorld.debugLog = true
+</code></pre><p>To set it for the whole service, you would set:</p>
+<pre class="prettyprint"><code>play.soap.services.com.example.HelloWorldService.debugLog = true
+</code></pre><p>And to set it globally, you would set:</p>
+<pre class="prettyprint"><code>play.soap.debugLog = true
+</code></pre><h3>Changing the address</h3><p>The address of a port can be set using the <code>address</code> property. For example, to set the address of every port for the <code>HelloWorldService</code>:</p>
+<pre class="prettyprint"><code>play.soap.services.com.example.HelloWorldService.address = &quot;http://example.com/helloWorld&quot;
+</code></pre><h3>Turning on the debug log</h3><p>The debug log will log the outbound and inbound messages, including HTTP headers, made by the client. An example of this is as follows:</p>
+<pre class="prettyprint"><code>16:52:17.953 [pool-1-thread-1] INFO  o.a.c.s.H.HelloWorldPort.HelloWorld - Outbound Message
+---------------------------
+ID: 1
+Address: http://example.com/helloWorld
+Encoding: UTF-8
+Http-Method: POST
+Content-Type: text/xml
+Headers: {Accept=[*/*], SOAPAction=[&quot;&quot;]}
+Payload: &lt;soap:Envelope xmlns:soap=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;&lt;soap:Body&gt;&lt;ns2:sayHello xmlns:ns2=&quot;http://example.com/&quot;&gt;&lt;name&gt;world&lt;/name&gt;&lt;/ns2:sayHello&gt;&lt;/soap:Body&gt;&lt;/soap:Envelope&gt;
+--------------------------------------
+16:52:18.180 [default-workqueue-1] INFO  o.a.c.s.H.HelloWorldPort.HelloWorld - Inbound Message
+----------------------------
+ID: 1
+Response-Code: 200
+Encoding: UTF-8
+Content-Type: text/xml;charset=UTF-8
+Headers: {Content-Length=[204], content-type=[text/xml;charset=UTF-8], Server=[Jetty(8.1.15.v20140411)]}
+Payload: &lt;soap:Envelope xmlns:soap=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;&lt;soap:Body&gt;&lt;ns2:sayHelloResponse xmlns:ns2=&quot;http://example.com/&quot;&gt;&lt;return&gt;Hello world&lt;/return&gt;&lt;/ns2:sayHelloResponse&gt;&lt;/soap:Body&gt;&lt;/soap:Envelope&gt;
+--------------------------------------
+</code></pre><p>The debug log can be turned on using the <code>debugLog</code> property, for example, to turn it on globally:</p>
+<pre class="prettyprint"><code>play.soap.debugLog = true
+</code></pre><p>In combination with the <code>debugLog</code> property, you may need to adjust the logging levels in your Play application. To see the debug log, you need to ensure that <code>org.apache.cxf.services</code> is configured to log at least <code>INFO</code> messages. This can be further refined by supplying the service name, port and service endpoint interface name, for example, <code>org.apache.cxf.services.HelloWorldService</code>.</p>
+						</article>
+
+					</div>
+				</div>
+				<footer class="site-footer">
+					<div class="row">
+						<div class="small-12 medium-12 large-12 small-centered columns">
+
+							<div class="logos">
+								<a class="footer-logo typsafe" href="http://www.typesafe.com"><svg class="ts-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 160" enable-background="new 0 0 660 160"><g><g fill="#fff"><path d="M197.9 40.7h-29.9v-17.7h80v17.7h-29.9v74.6h-20.3v-74.6zM236.6 143.5l16.5-35-25.5-55.9h20.4l6.5 15.6c2.8 6.8 5.5 13.4 8 19.9h.3c2.8-6.9 5.6-13.5 8.5-20.3l6.6-15.2h19.3l-40.8 90.8h-19.8zM319.9 143.5h-19.4v-90.9h19v3.2l.3.1c4.1-2.8 9.3-4.7 15.6-4.7 16.1 0 29.7 12.8 29.7 32.3 0 20.2-14.4 33.3-32.8 33.3-5.1 0-9.2-1-12.1-2.4l-.3.1v29zm9.9-42.4c10.1 0 15.7-7.3 15.7-16.6 0-9.4-5.6-17.1-15.2-17.1-4 0-7.7 1.4-10.5 3.4v27.8c2.5 1.3 6.1 2.5 10 2.5zM388.8 89.1c2.2 8.7 9.3 12.6 18.2 12.6 7 0 14.7-2.4 21.3-6.9v16.2c-6.1 3.8-15.6 5.7-23.9 5.7-20.7 0-35.6-12.9-35.6-32.5 0-20 15.6-33 32.9-33 15.4 0 30 10.2 30 31.3 0 2.2-.1 5-.4 6.6h-42.5zm25.2-12.2c-1.1-6.8-6.1-10.8-12.4-10.8-6 0-11.2 3.7-12.9 10.8h25.3zM436.9 94.6c8.7 5.1 18.8 7.3 24.8 7.3 5.4 0 8.5-1.4 8.5-4.8 0-4.8-7-4.3-16.5-6.8-11.9-2.9-18.9-7.9-18.9-18.2.1-13.3 11.9-20.8 27.4-20.8 7.5 0 16.8 1.5 24 5v16.7c-8.3-4.7-18-6.8-23.6-6.8-5.1 0-8.2 1.5-8.2 4.5 0 4.6 6.8 4.2 16.1 6.5 12 2.9 19.3 7.5 19.3 18.4-.1 13.8-12.1 21.3-28.2 21.3-7.5 0-17.2-1.5-24.8-5.2v-17.1zM531.7 111.6c-4.1 2.9-10.3 5.2-17.5 5.2-5.4 0-10.5-1.3-14.5-4.1-4.6-3.2-7.4-8.2-7.4-14.7 0-6.9 3.2-12.1 7.7-15.2 4.8-3.3 11.1-4.5 17.6-4.5 3.7 0 7.4.4 10.8 1.1v-2.4c0-3.1-1-5.4-2.4-6.6-1.8-1.7-5.1-2.7-9.7-2.7-7 0-13.4 2.3-18.4 5v-16.6c5.1-2.6 12.8-4.8 21.9-4.8 8.4 0 15.9 1.9 20.9 6 4.7 3.8 7 9.4 7 17.4v21.3c0 2.9 1.1 5 3.8 5 1 0 2.2-.3 3.2-.8v14.5c-2.2 1.1-5.6 1.9-9.3 1.9-5.1 0-10.1-1.4-13.5-5h-.2zm-3.3-20.8c-2-.6-4.8-.9-6.9-.9-5 0-10 1.5-10 6.4 0 4.1 3.6 6.3 8 6.3 3.3 0 6.5-1.1 8.8-2.6v-9.2zM561.5 68.7h-8.9v-16.1h8.9v-9.3c0-8.8 1.8-16.3 6.6-20.9 4.5-4.3 11.5-5.9 17.7-5.9 3.6 0 7.3.5 10.7 1.8v15.7c-2.4-.6-6.3-1.1-8.4-1.1-6 0-7.3 3.8-7.3 9.2v10.6h14.5v16.1h-14.5v46.7h-19.4v-46.8zM614.5 89.1c2.2 8.7 9.3 12.6 18.2 12.6 7 0 14.7-2.4 21.3-6.9v16.2c-6.1 3.8-15.6 5.7-23.9 5.7-20.7 0-35.6-12.9-35.6-32.5 0-20 15.6-33 32.9-33 15.4 0 30 10.2 30 31.3 0 2.2-.1 5-.4 6.6h-42.5zm25.1-12.2c-1.1-6.8-6.1-10.8-12.4-10.8-6 0-11.2 3.7-12.9 10.8h25.3z"/></g><path fill="#fff" d="M53.7 116c-4.8 0-8.7-4.6-8.7-9.4v-.2c0-4.8 3.9-8.4 8.7-8.4h100c.9-3 1.6-7 2-11h-84c-4.8 0-8.7-3.7-8.7-8.5s3.9-8.5 8.7-8.5h83.7c-.5-4-1.2-8-2.3-11h-63.4c-4.8 0-8.7-3.7-8.7-8.5s3.9-8.5 8.7-8.5h56c-13.1-23-37.2-37.5-64.7-37.5-41.4 0-75 33.3-75 74.7s33.6 75.4 75 75.4c28.4 0 53.1-15.6 65.8-38.6h-93.1z"/></g></svg></a>
+							</div>
+							<p>©2015 - All Rights Reserved</p>
+						</div>
+					</div>
+				</footer>
+			</div>
+		</div>
+
+		<script type="text/javascript" src="lib/jquery/jquery.min.js"></script>
+		<script type="text/javascript" src="javascripts/vendor/fastclick.min.js"></script>
+		<script type="text/javascript" src="javascripts/foundation.min.js"></script>
+		<script type="text/javascript" src="javascripts/main.min.js"></script>
+
+		<style type="text/css">
+		@import "lib/prettify/prettify.css";
+		</style>
+		<script type="text/javascript" charset="utf-8" src="lib/prettify/prettify.js"></script>
+		<script type="text/javascript" charset="utf-8" src="lib/prettify/lang-scala.js"></script>
+		<script type="text/javascript">
+		$(function(){
+		window.prettyPrint && prettyPrint()
+		});
+		</script>
+
+	</body>
+</html>

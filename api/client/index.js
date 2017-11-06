@@ -1,0 +1,1 @@
+Index.PACKAGES = {"play" : [], "play.soap" : [{"class" : "play\/soap\/ApacheCxfBus.html", "name" : "play.soap.ApacheCxfBus"}, {"class" : "play\/soap\/PlaySoapClient.html", "name" : "play.soap.PlaySoapClient"}]};
